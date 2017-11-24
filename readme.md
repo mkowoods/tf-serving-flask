@@ -1,7 +1,7 @@
 
 Requirements:
  - python 2.7 #currently the only supported version for tensorflow serving
- - tensorfow tensorflow-serving-api keras flask
+ - tensorfow tensorflow-serving-api keras flask h5py
  
 
 Command for launching server
