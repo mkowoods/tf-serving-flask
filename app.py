@@ -15,6 +15,7 @@ TF_SERV_PORT = '9000'
 TF_SERV_CHANNEL = implementations.insecure_channel(TF_SERV_HOST, int(TF_SERV_PORT))
 TF_SERV_STUB = prediction_service_pb2.beta_create_PredictionService_stub(TF_SERV_CHANNEL)
 
+
 def predict_classes(img):
     s = time.time()
     request = predict_pb2.PredictRequest()
@@ -63,18 +64,17 @@ def _preprocess_image(x):
     x = np.expand_dims(x, axis=0)
     return x
 
+TEST_IMG = _preprocess_image(read_image_as_nparr_RGB('./elephant.jpeg'))
+
+
 @app.route('/api/test/classes')
 def test_classes():
-    img = read_image_as_nparr_RGB('./elephant.jpeg')
-    img = _preprocess_image(img)
-    img = predict_classes(img)
+    img = predict_classes(TEST_IMG)
     return str(img.shape)
 
 @app.route('/api/test/features')
 def test_features():
-    img = read_image_as_nparr_RGB('./elephant.jpeg')
-    img = _preprocess_image(img)
-    feat = get_features(img)
+    feat = get_features(TEST_IMG)
     return str(feat.shape)
 
 
