@@ -32,7 +32,7 @@ with CustomObjectScope({'relu6': keras.applications.mobilenet.relu6,'DepthwiseCo
 
 
 export_path_base = './mobilenet-alpha-1-228-bottleneck-export'
-export_version = padding = '{0:08d}'.format(2)  # version number (integer)
+export_version = padding = '{0:08d}'.format(1)  # version number (integer)
 sess = K.get_session()
 
 # saver = tf.train.Saver(sharded=True)
@@ -57,13 +57,14 @@ prediction_signature = (
         method_name=tf.saved_model.signature_constants.PREDICT_METHOD_NAME
     )
 )
-
+legacy_init_op = tf.group(tf.tables_initializer(), name='legacy_init_op')
 builder.add_meta_graph_and_variables(
       sess, [tag_constants.SERVING],
       signature_def_map={
            'predict':
                prediction_signature
-      })
+      },
+    legacy_init_op=legacy_init_op)
 builder.save()
 
 if __name__ == "__main__":
