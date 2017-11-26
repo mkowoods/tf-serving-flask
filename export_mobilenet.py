@@ -16,10 +16,16 @@ import keras.backend as K
 from keras.applications import MobileNet
 from keras.models import Model
 
+tf.app.flags.DEFINE_integer('version', '1', 'Model Version')
+tf.app.flags.DEFINE_string('model_type', '', 'which model do you want to train')
+
+FLAGS = tf.app.flags.FLAGS
+
 # very important to do this as a first thing
 K.set_learning_phase(0)
 
-model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
+if FLAGS.model_type == 'mobilenet_1_228_bottleneck':
+    model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3), pooling='avg')
 
 # The creation of a new model might be optional depending on the goal
 config = model.get_config()
@@ -31,8 +37,8 @@ with CustomObjectScope({'relu6': keras.applications.mobilenet.relu6,'DepthwiseCo
     new_model.set_weights(weights)
 
 
-export_path_base = './mobilenet-alpha-1-228-bottleneck-export'
-export_version = padding = '{0:08d}'.format(1)  # version number (integer)
+export_path_base = './{}-export'.format(FLAGS.model_type)
+export_version = padding = '{0:08d}'.format(FLAGS.version)  # version number (integer)
 sess = K.get_session()
 
 # saver = tf.train.Saver(sharded=True)
