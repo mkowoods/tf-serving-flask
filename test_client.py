@@ -68,6 +68,4 @@ def main(_):
     print 'Total Run Time:', time.time() - s
 if __name__ == '__main__':
 
-
-
   tf.app.run()

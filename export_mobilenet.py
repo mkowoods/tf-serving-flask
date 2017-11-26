@@ -32,7 +32,7 @@ with CustomObjectScope({'relu6': keras.applications.mobilenet.relu6,'DepthwiseCo
 
 
 export_path_base = './mobilenet-alpha-1-228-bottleneck-export'
-export_version = padding = '{0:08d}'.format(1)  # version number (integer)
+export_version = padding = '{0:08d}'.format(2)  # version number (integer)
 sess = K.get_session()
 
 # saver = tf.train.Saver(sharded=True)
@@ -53,7 +53,9 @@ tensor_info_y = tf.saved_model.utils.build_tensor_info(new_model.output)
 prediction_signature = (
     tf.saved_model.signature_def_utils.build_signature_def(
         inputs={'images': tensor_info_x},
-        outputs={'features': tensor_info_y})
+        outputs={'features': tensor_info_y},
+        method_name=tf.saved_model.signature_constants.PREDICT_METHOD_NAME
+    )
 )
 
 builder.add_meta_graph_and_variables(
