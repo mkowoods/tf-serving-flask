@@ -13,11 +13,11 @@ app = Flask(__name__)
 TF_SERV_HOST = 'localhost'
 TF_SERV_PORT = '9000'
 TF_SERV_CHANNEL = implementations.insecure_channel(TF_SERV_HOST, int(TF_SERV_PORT))
+TF_SERV_STUB = prediction_service_pb2.beta_create_PredictionService_stub(TF_SERV_CHANNEL)
 
 
 def predict_classes(img):
     s = time.time()
-    stub = prediction_service_pb2.beta_create_PredictionService_stub(TF_SERV_CHANNEL)
     request = predict_pb2.PredictRequest()
     request.model_spec.name = 'mobilenet-classify'
     request.model_spec.signature_name = 'predict'
@@ -25,14 +25,13 @@ def predict_classes(img):
         make_tensor_proto(img, shape=img.shape)
     )
     print 'size of request', sys.getsizeof( str(request) )
-    result = stub.Predict(request, 10.0)  # 10 secs timeout
-    result = make_ndarray(result.ListFields()[0][1].get('scores'))
+    result = TF_SERV_STUB.Predict(request, 10.0)  # 10 secs timeout
+    result = make_ndarray(result.ListFields()[0][1].get('features'))
     print 'elapsed time', time.time() - s
     return result
 
 def get_features(img):
     s = time.time()
-    stub = prediction_service_pb2.beta_create_PredictionService_stub(TF_SERV_CHANNEL)
     request = predict_pb2.PredictRequest()
     request.model_spec.name = 'mobilenet-alpha-1-228-bottleneck'
     request.model_spec.signature_name = 'predict'
@@ -40,7 +39,7 @@ def get_features(img):
         make_tensor_proto(img, shape=img.shape)
     )
     print 'size of request', sys.getsizeof( str(request) )
-    result = stub.Predict(request, 10.0)  # 10 secs timeout
+    result = TF_SERV_STUB.Predict(request, 10.0)  # 10 secs timeout
     result = make_ndarray(result.ListFields()[0][1].get('features'))
     print 'elapsed time', time.time() - s
     return result
