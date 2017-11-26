@@ -32,8 +32,8 @@ K.set_learning_phase(0)
 
 
 #if FLAGS.model_type == 'mobilenet_1_228_bottleneck':
-#model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3), pooling='avg')
-model = MobileNet(weights='imagenet')
+model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3), pooling='avg')
+#model = MobileNet(weights='imagenet')
 
 # The creation of a new model might be optional depending on the goal
 config = model.get_config()
@@ -165,9 +165,9 @@ def ppppp():
 
 if __name__ == "__main__":
     import shutil
-    dir = './mobilenet-alpha-1-228-export/00000001'
+    dir = './mobilenet-alpha-1-228-bottleneck-export/00000001'
     if os.path.isdir(dir): shutil.rmtree(dir)
-    freeze_and_quantize(sess, model, 'mobilenet-alpha-1-228')
-    g = load_graph('./tmp/mobilenet-alpha-1-228-opt.pb')
+    freeze_and_quantize(sess, model, 'mobilenet-alpha-1-228-bottleneck')
+    g = load_graph('./tmp/mobilenet-alpha-1-228-bottleneck-opt.pb')
     #g = load_graph('./tmp/mobilenet-alpha-1-228-bottleneck-quant.pb')
     save_model_from_graph(g, model, export_path = dir)
