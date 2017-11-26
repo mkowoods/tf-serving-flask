@@ -49,11 +49,12 @@ def main(_):
     )
 
     result = stub.Predict(request, 10.0)  # 10 secs timeout
-    print decode_predictions( tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('scores')) )
+    print len(decode_predictions( tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('scores')) ))
 
     #print(result)
     print 'Total Run Time:', time.time() - s
 
+    s = time.time()
 
     request = predict_pb2.PredictRequest()
     request.model_spec.name = 'mobilenet-alpha-1-228-bottleneck'
@@ -63,7 +64,7 @@ def main(_):
     )
 
     result = stub.Predict(request, 10.0)  # 10 secs timeout
-    print tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features'))
+    print tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')).shape
     #print(result)
     print 'Total Run Time:', time.time() - s
 if __name__ == '__main__':
