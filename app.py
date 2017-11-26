@@ -29,7 +29,7 @@ def predict_classes(img):
     print 'time to predict', time.time() - s
     result = np.array([result.outputs['features'].float_val])
     print 'elapsed time', time.time() - s
-    return jsonify({'data' : result.tolist() })
+    return result
 
 def get_features(img):
     s = time.time()
@@ -44,7 +44,7 @@ def get_features(img):
 
     features = np.array([result.outputs['features'].float_val])
     print 'elapsed time', time.time() - s
-    return features.shape
+    return features
 
 
 def read_image_as_nparr_RGB(path, shape = None):
@@ -71,13 +71,13 @@ TEST_IMG = _preprocess_image(read_image_as_nparr_RGB('./elephant.jpeg'))
 
 @app.route('/api/test/classes')
 def test_classes():
-    img = predict_classes(TEST_IMG)
-    return str(img.shape)
+    class_vector = predict_classes(TEST_IMG)
+    return jsonify({'data': class_vector.tolist()})
 
 @app.route('/api/test/features')
 def test_features():
     feat = get_features(TEST_IMG)
-    return str(feat.shape)
+    return jsonify({'data': feat.tolist()})
 
 
 if __name__ == "__main__":
