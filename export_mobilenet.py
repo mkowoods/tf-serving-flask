@@ -32,8 +32,8 @@ K.set_learning_phase(0)
 
 
 #if FLAGS.model_type == 'mobilenet_1_228_bottleneck':
-model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3), pooling='avg')
-#model = MobileNet(weights='imagenet')
+#model = MobileNet(weights='imagenet', include_top=False, input_shape=(224, 224, 3), pooling='avg')
+model = MobileNet(weights='imagenet', alpha=0.75)
 
 # The creation of a new model might be optional depending on the goal
 config = model.get_config()
@@ -47,7 +47,7 @@ weights = model.get_weights()
 
 sess = K.get_session()
 
-def freeze_models(sess, out_name, fpath = 'mobilenet-alpha-1-228.pb'):
+def freeze_models(sess, out_name, fpath = None):
     #https://stackoverflow.com/questions/34343259/is-there-an-example-on-how-to-generate-protobuf-files-holding-trained-tensorflow
     #https://gist.github.com/tokestermw/795cc1fd6d0c9069b20204cbd133e36b
 
@@ -85,9 +85,12 @@ def freeze_and_quantize(sess, model, fpath):
 
     inputs = [model.input.name.split(':')[0]]
     outputs = [out_name]
-    # quantize_weights quantize_node don't quantize mobilenet https://stackoverflow.com/questions/44832492/tensorflow-ssd-mobilenet-model-accuracy-drop-after-quantization-using-transform
-    transforms = 'add_default_attributes strip_unused_nodes fold_constants(ignore_errors=true) fold_batch_norms \
-     fold_old_batch_norms strip_unused_nodes sort_by_execution_order'.split()
+    # quantize_weights quantize_nodes
+    # don't quantize mobilenet https://stackoverflow.com/questions/44832492/tensorflow-ssd-mobilenet-model-accuracy-drop-after-quantization-using-transform
+    transforms = 'add_default_attributes strip_unused_nodes(type=float, shape="1,224,224,3") ' \
+                 'remove_nodes(op=Identity, op=CheckNumerics) fold_constants(ignore_errors=true) ' \
+                 'fold_batch_norms fold_old_batch_norms  ' \
+                 'strip_unused_nodes sort_by_execution_order'.split()
     results = TransformGraph(frozen_graph_def, inputs, outputs, transforms)
 
 
@@ -108,7 +111,13 @@ def load_graph(frozen_graph_filename = None):
                             name="")
         return graph
 
-def save_model_from_graph(graph, model, export_path = './tmp/test'):
+def save_model_from_graph(graph, model, model_name = None, version = None):
+
+    export_path_base = './{}-export'.format(model_name)
+    export_version = '{0:08d}'.format(version)
+    export_path = os.path.join(export_path_base, str(export_version))
+
+    if os.path.isdir(export_path): shutil.rmtree(export_path)
 
     builder = tf.saved_model.builder.SavedModelBuilder(export_path)
 
@@ -165,9 +174,10 @@ def ppppp():
 
 if __name__ == "__main__":
     import shutil
-    dir = './mobilenet-alpha-1-228-bottleneck-export/00000001'
-    if os.path.isdir(dir): shutil.rmtree(dir)
-    freeze_and_quantize(sess, model, 'mobilenet-alpha-1-228-bottleneck')
-    g = load_graph('./tmp/mobilenet-alpha-1-228-bottleneck-opt.pb')
+    m_name = 'mobilenet-alpha-0.75-228'
+    version = 1
+
+    freeze_and_quantize(sess, model, m_name)
+    g = load_graph('./tmp/{}-opt.pb'.format(m_name))
     #g = load_graph('./tmp/mobilenet-alpha-1-228-bottleneck-quant.pb')
-    save_model_from_graph(g, model, export_path = dir)
+    save_model_from_graph(g, model, model_name=m_name, version=version)

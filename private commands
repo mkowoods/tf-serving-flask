@@ -1,0 +1,1 @@
+gcloud compute scp elephant.jpeg  trxsfr-learning-app-1:~/

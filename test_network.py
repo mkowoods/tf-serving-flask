@@ -18,15 +18,15 @@ def read_image_as_nparr_RGB(path, shape = None):
 
 img = np.expand_dims( preprocess_input( read_image_as_nparr_RGB('./elephant.jpeg', shape=(224, 224))), axis=0)
 
-g = load_graph('./tmp/'+ 'mobilenet-alpha-1-228.pb')
+#g = load_graph('./tmp/mobilenet-alpha-1-228-opt.pb')
 
 
 
-with tf.Session(graph=g) as sess:
-    op = sess.graph.get_operations()
+with tf.Session(graph=tf.Graph()) as sess:
+    #op = sess.graph.get_operations()
     # for m in op:
     #     print m.values()
-    tf.saved_model.loader.load(sess, [tag_constants.SERVING], './mobilenet-alpha-1-228-export/00000001')
+    tf.saved_model.loader.load(sess, [tag_constants.SERVING], './mobilenet-alpha-1-228-export/00000003')
 
     print '####################\n########################\n################\n'
     op = sess.graph.get_operations()
