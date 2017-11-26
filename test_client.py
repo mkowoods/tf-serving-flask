@@ -52,8 +52,8 @@ def main(_):
         result = stub.Predict(request, 20.0)  # 10 secs timeout
         #print result.ListFields()
         #print tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('scores'))
-        print tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')).shape
-        sh = decode_predictions( tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')) )
+        #print tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')).shape
+        sh = decode_predictions( np.array([result.outputs['features'].float_val]) )
 
         #print(result)
         print 'Total Run Time:', time.time() - s, sh
@@ -70,7 +70,7 @@ def main(_):
         )
 
         result = stub.Predict(request, 20.0)  # 10 secs timeout
-        sh = tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')).shape
+        sh = np.array( result.outputs['features'].float_val ).shape
         #print(result)
         print 'Total Run Time:', time.time() - s, sh
 

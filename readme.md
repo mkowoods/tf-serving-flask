@@ -21,7 +21,7 @@ or below if compiled from source
 
 serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=9000 --model_base_path=/home/mkowoods/mobilenet-alpha-1-228-228-export &
 
-serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=9000 --model_conf=/home/mkowoods/tf-serving-flask/tf_serving_config.conf
+serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=9000 --model_config_file=/home/mkowoods/tf-serving-flask/tf_serving_config.conf
 ```
 
 # TODO:
@@ -33,5 +33,7 @@ serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --por
  https://towardsdatascience.com/how-to-deploy-machine-learning-models-with-tensorflow-part-2-containerize-it-db0ad7ca35a7
  https://github.com/llSourcell/How-to-Deploy-a-Tensorflow-Model-in-Production/blob/master/demo.ipynb
  https://github.com/aaxwaz/Serving-TensorFlow-Model
+
+ https://github.com/Vetal1977/tf_serving_flask_app
  
  

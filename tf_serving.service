@@ -1,0 +1,15 @@
+[Unit]
+Description=startup tensorflow server copied to /etc/init/tf_serving.conf
+
+
+[Service]
+ExecStart=/home/mkowoods/serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server \
+            --port=9000 \
+            --model_config_file=/home/mkowoods/tf-serving-flask/tf_serving_config.conf
+Restart=always
+KillSignal=SIGQUIT
+Type=notify
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target

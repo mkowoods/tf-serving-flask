@@ -1,12 +1,12 @@
-from flask import Flask
+from flask import Flask, jsonify
 from cv2 import imread, resize, cvtColor, COLOR_BGR2RGB
 import numpy as np
-from tensorflow import make_tensor_proto, make_ndarray
+from tensorflow import make_tensor_proto
 import time
-import sys
 
 from grpc.beta import implementations
 from tensorflow_serving.apis import predict_pb2, prediction_service_pb2
+
 app = Flask(__name__)
 
 
@@ -24,11 +24,12 @@ def predict_classes(img):
     request.inputs['images'].CopyFrom(
         make_tensor_proto(img, shape=img.shape)
     )
-    print 'size of request', sys.getsizeof( str(request) )
+    #print 'size of request', sys.getsizeof( str(request) )
     result = TF_SERV_STUB.Predict(request, 10.0)  # 10 secs timeout
-    result = make_ndarray(result.ListFields()[0][1].get('features'))
+    print 'time to predict', time.time() - s
+    result = np.array([result.outputs['features'].float_val])
     print 'elapsed time', time.time() - s
-    return result
+    return jsonify({'data' : result.tolist() })
 
 def get_features(img):
     s = time.time()
@@ -38,11 +39,12 @@ def get_features(img):
     request.inputs['images'].CopyFrom(
         make_tensor_proto(img, shape=img.shape)
     )
-    print 'size of request', sys.getsizeof( str(request) )
+    #print 'size of request', sys.getsizeof( str(request) )
     result = TF_SERV_STUB.Predict(request, 10.0)  # 10 secs timeout
-    result = make_ndarray(result.ListFields()[0][1].get('features'))
+
+    features = np.array([result.outputs['features'].float_val])
     print 'elapsed time', time.time() - s
-    return result
+    return features.shape
 
 
 def read_image_as_nparr_RGB(path, shape = None):
