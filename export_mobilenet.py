@@ -85,12 +85,13 @@ def freeze_and_quantize(sess, model, fpath):
 
     inputs = [model.input.name.split(':')[0]]
     outputs = [out_name]
+    # quantize_weights quantize_node don't quantize mobilenet https://stackoverflow.com/questions/44832492/tensorflow-ssd-mobilenet-model-accuracy-drop-after-quantization-using-transform
     transforms = 'add_default_attributes strip_unused_nodes fold_constants(ignore_errors=true) fold_batch_norms \
-     fold_old_batch_norms quantize_weights quantize_nodes strip_unused_nodes sort_by_execution_order'.split()
+     fold_old_batch_norms strip_unused_nodes sort_by_execution_order'.split()
     results = TransformGraph(frozen_graph_def, inputs, outputs, transforms)
 
 
-    with tf.gfile.GFile('./tmp/'+ fpath+'-quantize.pb', 'wb') as f:
+    with tf.gfile.GFile('./tmp/'+ fpath+'-opt.pb', 'wb') as f:
         f.write(results.SerializeToString())
     return results
 
@@ -164,9 +165,9 @@ def ppppp():
 
 if __name__ == "__main__":
     import shutil
-    dir = './tmp/test2'
-    shutil.rmtree(dir)
+    dir = './mobilenet-alpha-1-228-export/00000001'
+    if os.path.isdir(dir): shutil.rmtree(dir)
     freeze_and_quantize(sess, model, 'mobilenet-alpha-1-228')
-    g = load_graph('./tmp/mobilenet-alpha-1-228-quantize.pb')
+    g = load_graph('./tmp/mobilenet-alpha-1-228-opt.pb')
     #g = load_graph('./tmp/mobilenet-alpha-1-228-bottleneck-quant.pb')
     save_model_from_graph(g, model, export_path = dir)

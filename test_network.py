@@ -26,7 +26,7 @@ with tf.Session(graph=g) as sess:
     op = sess.graph.get_operations()
     # for m in op:
     #     print m.values()
-    tf.saved_model.loader.load(sess, [tag_constants.SERVING], './tmp/test2')
+    tf.saved_model.loader.load(sess, [tag_constants.SERVING], './mobilenet-alpha-1-228-export/00000001')
 
     print '####################\n########################\n################\n'
     op = sess.graph.get_operations()
