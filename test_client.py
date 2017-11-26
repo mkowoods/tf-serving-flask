@@ -39,34 +39,39 @@ def main(_):
     img = preprocess_input(img)
     img = np.expand_dims(img, axis=0)
 
-    s = time.time()
+    for _ in range(10):
+        s = time.time()
 
-    request = predict_pb2.PredictRequest()
-    request.model_spec.name = 'mobilenet-alpha-1-228'
-    request.model_spec.signature_name = 'predict'
-    request.inputs['images'].CopyFrom(
-        tf.make_tensor_proto(img, shape=img.shape)
-    )
+        request = predict_pb2.PredictRequest()
+        request.model_spec.name = 'mobilenet-alpha-1-228'
+        request.model_spec.signature_name = 'predict'
+        request.inputs['images'].CopyFrom(
+            tf.make_tensor_proto(img, shape=img.shape)
+        )
 
-    result = stub.Predict(request, 10.0)  # 10 secs timeout
-    print len(decode_predictions( tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('scores')) ))
+        result = stub.Predict(request, 10.0)  # 10 secs timeout
+        sh = len(decode_predictions( tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('scores')) ))
 
-    #print(result)
-    print 'Total Run Time:', time.time() - s
+        #print(result)
+        print 'Total Run Time:', time.time() - s, sh
 
-    s = time.time()
 
-    request = predict_pb2.PredictRequest()
-    request.model_spec.name = 'mobilenet-alpha-1-228-bottleneck'
-    request.model_spec.signature_name = 'predict'
-    request.inputs['images'].CopyFrom(
-        tf.make_tensor_proto(img, shape=img.shape)
-    )
+    for _ in range(10):
+        s = time.time()
 
-    result = stub.Predict(request, 10.0)  # 10 secs timeout
-    print tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')).shape
-    #print(result)
-    print 'Total Run Time:', time.time() - s
+        request = predict_pb2.PredictRequest()
+        request.model_spec.name = 'mobilenet-alpha-1-228-bottleneck'
+        request.model_spec.signature_name = 'predict'
+        request.inputs['images'].CopyFrom(
+            tf.make_tensor_proto(img, shape=img.shape)
+        )
+
+        result = stub.Predict(request, 10.0)  # 10 secs timeout
+        sh = tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')).shape
+        #print(result)
+        print 'Total Run Time:', time.time() - s, sh
+
+
 if __name__ == '__main__':
 
   tf.app.run()
