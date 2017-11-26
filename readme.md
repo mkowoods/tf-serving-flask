@@ -19,9 +19,9 @@ tensorflow_model_server --port=9000 --model_base_path=/home/mkowoods/mobilenet-a
 
 or below if compiled from source 
 
-serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port
-=9000 --model_base_path=/home/mkowoods/mobilenet-alpha-1-228-228-export &
+serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=9000 --model_base_path=/home/mkowoods/mobilenet-alpha-1-228-228-export &
 
+serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=9000 --model_conf=/home/mkowoods/tf-serving-flask/tf_serving_config.conf
 ```
 
 # TODO:

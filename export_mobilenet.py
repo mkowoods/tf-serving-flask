@@ -59,7 +59,7 @@ prediction_signature = (
 builder.add_meta_graph_and_variables(
       sess, [tag_constants.SERVING],
       signature_def_map={
-           'image_features':
+           'predict':
                prediction_signature
       })
 builder.save()
