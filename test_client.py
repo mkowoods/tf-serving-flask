@@ -39,7 +39,7 @@ def main(_):
     img = preprocess_input(img)
     img = np.expand_dims(img, axis=0)
 
-    for _ in range(10):
+    for _ in range(5):
         s = time.time()
 
         request = predict_pb2.PredictRequest()
@@ -49,14 +49,16 @@ def main(_):
             tf.make_tensor_proto(img, shape=img.shape)
         )
 
-        result = stub.Predict(request, 10.0)  # 10 secs timeout
-        sh = len(decode_predictions( tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('scores')) ))
+        result = stub.Predict(request, 20.0)  # 10 secs timeout
+        #print result.ListFields()
+        #print tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('scores'))
+        sh = decode_predictions( tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')) )
 
         #print(result)
         print 'Total Run Time:', time.time() - s, sh
 
 
-    for _ in range(10):
+    for _ in range(5):
         s = time.time()
 
         request = predict_pb2.PredictRequest()
@@ -66,7 +68,7 @@ def main(_):
             tf.make_tensor_proto(img, shape=img.shape)
         )
 
-        result = stub.Predict(request, 10.0)  # 10 secs timeout
+        result = stub.Predict(request, 20.0)  # 10 secs timeout
         sh = tf.contrib.util.make_ndarray(result.ListFields()[0][1].get('features')).shape
         #print(result)
         print 'Total Run Time:', time.time() - s, sh
