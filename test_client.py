@@ -43,7 +43,7 @@ def main(_):
         s = time.time()
 
         request = predict_pb2.PredictRequest()
-        request.model_spec.name = 'mobilenet-alpha-1-228'
+        request.model_spec.name = 'mobilenet-classify'
         request.model_spec.signature_name = 'predict'
         request.inputs['images'].CopyFrom(
             tf.make_tensor_proto(img, shape=img.shape)

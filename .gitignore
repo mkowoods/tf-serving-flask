@@ -1,2 +1,5 @@
 .idea
 *.zip
+*.pyc
+tmp
+.secret
