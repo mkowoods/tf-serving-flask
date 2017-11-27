@@ -1,5 +1,5 @@
 from flask import Flask, jsonify
-from cv2 import imread, resize, cvtColor, COLOR_BGR2RGB
+import cv2
 import numpy as np
 from tensorflow import make_tensor_proto #it would be great to remove this as well
 import time
@@ -48,10 +48,10 @@ def get_features(img):
 
 
 def read_image_as_nparr_RGB(path, shape = None):
-    img_BGR = imread(path)
+    img_BGR = cv2.imread(path)
     if shape is not None:
-        img_BGR = resize(img_BGR, shape)
-    return cvtColor(img_BGR, COLOR_BGR2RGB).astype('float32')
+        img_BGR = cv2.resize(img_BGR, shape)
+    return cv2.cvtColor(img_BGR, cv2.COLOR_BGR2RGB).astype('float32')
 
 def _preprocess_image(x):
     assert len(x.shape) == 3, 'only support 3 dimensional arrays'

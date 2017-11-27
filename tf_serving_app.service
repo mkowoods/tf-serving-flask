@@ -7,7 +7,7 @@ User=mkowoods
 Group=www-data
 WorkingDirectory=/home/mkowoods/tf-serving-flask
 Environment="PATH=/home/mkowoods/miniconda/envs/tf-serving/bin"
-ExecStart=uwsgi --ini tf_serving_app.ini
+ExecStart=/home/mkowoods/envs/tf-serving/bin/uwsgi --ini tf_serving_app.ini
 
 [Install]
 WantedBy=multi-user.target
