@@ -1,11 +1,11 @@
 from flask import Flask, jsonify
 from cv2 import imread, resize, cvtColor, COLOR_BGR2RGB
 import numpy as np
-from tensorflow import make_tensor_proto
+from tensorflow import make_tensor_proto #it would be great to remove this as well
 import time
 
 from grpc.beta import implementations
-from tensorflow_serving.apis import predict_pb2, prediction_service_pb2
+from tensorflow_serving.apis import predict_pb2, prediction_service_pb2 #this library uses a lot of memory
 
 app = Flask(__name__)
 

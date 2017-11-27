@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import tensorflow as tf
+import time
 from tensorflow.python.saved_model import tag_constants, signature_constants
 
 from keras.applications.mobilenet import decode_predictions, preprocess_input
@@ -33,5 +34,8 @@ with tf.Session(graph=tf.Graph()) as sess:
     for m in op[:100]:
         print m.values()
 
-    output = sess.run("reshape_2/Reshape:0", feed_dict={"input_1:0":  img})
+    for i in range(10):
+        s = time.time()
+        output = sess.run("reshape_2/Reshape:0", feed_dict={"input_1:0":  img})
+        print 'elapsed time', time.time() - s
     print decode_predictions(  output )
