@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 import cv2
 import numpy as np
-from tensorflow import make_tensor_proto #it would be great to remove this as well
+#from tensorflow import make_tensor_proto #it would be great to remove this as well
 import time
 
 from grpc.beta import implementations
@@ -17,6 +17,8 @@ TF_SERV_STUB = prediction_service_pb2.beta_create_PredictionService_stub(TF_SERV
 
 
 def predict_classes(img):
+    #lazy loading to help with memory management on unused workers
+    from tensorflow.python.framework.tensor_util import make_tensor_proto
     s = time.time()
     request = predict_pb2.PredictRequest()
     request.model_spec.name = 'mobilenet-classify'
@@ -32,6 +34,7 @@ def predict_classes(img):
     return result
 
 def get_features(img):
+    from tensorflow.python.framework.tensor_util import make_tensor_proto
     s = time.time()
     request = predict_pb2.PredictRequest()
     request.model_spec.name = 'mobilenet-alpha-1-228-bottleneck'
