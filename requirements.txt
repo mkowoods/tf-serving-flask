@@ -4,3 +4,4 @@ Keras==2.1.1
 opencv-python==3.3.0.10
 tensorflow==1.4.0
 tensorflow-serving-api==1.4.0
+Pillow==4.3.0

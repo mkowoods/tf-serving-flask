@@ -5,6 +5,8 @@ command = """
 cd /home/mkowoods/tf-serving-flask \
 && sudo git fetch origin \
 && sudo git reset --hard origin/master \
+&& source activate tf-serving \
+&& pip install -r requirements.txt \
 && echo restarting tf_serving \
 && sudo systemctl restart tf_serving \
 && echo restarting tf_serving_app \

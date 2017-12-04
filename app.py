@@ -1,6 +1,4 @@
 from flask import Flask, jsonify, request
-#import cv2
-from PIL import Image
 import json
 import numpy as np
 from tensorflow.python.framework.tensor_util import make_tensor_proto
@@ -18,7 +16,7 @@ app = Flask(__name__)
 
 IMAGENET_CLASS_INDEX = json.load(open('imagenet_class_index.json', 'rb'))
 
-TF_SERV_HOST = '35.197.84.177'
+TF_SERV_HOST = 'localhost'
 TF_SERV_PORT = '9000'
 TF_SERV_CHANNEL = implementations.insecure_channel(TF_SERV_HOST, int(TF_SERV_PORT))
 TF_SERV_STUB = prediction_service_pb2.beta_create_PredictionService_stub(TF_SERV_CHANNEL)
