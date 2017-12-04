@@ -10,7 +10,7 @@ from tensorflow_serving.apis import prediction_service_pb2
 
 from keras.applications.mobilenet import preprocess_input, decode_predictions
 
-tf.app.flags.DEFINE_string('server', '35.197.37.75:9000',
+tf.app.flags.DEFINE_string('server', None,
                            'PredictionService host:port')
 tf.app.flags.DEFINE_string('image', './elephant.jpeg', 'path to image in JPEG format')
 FLAGS = tf.app.flags.FLAGS
