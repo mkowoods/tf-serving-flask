@@ -1,0 +1,22 @@
+#nginx config for load balancer
+
+
+upstream tf_servers {
+    # add lines server: IP_ADDRESS
+}
+
+
+
+server {
+    listen 80;
+    server_name local-stackdriver-agent.stackdriver.com;
+    location /nginx_status {
+        stub_status on;
+        access_log off;
+        allow 127.0.0.1;
+        deny all;
+    }
+    location / {
+        proxy_pass http://tf_servers;
+    }
+}
