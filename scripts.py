@@ -12,6 +12,7 @@ cd /home/mkowoods/tf-serving-flask \
 && sudo systemctl restart tf_serving_app \
 && echo restarting nginx \
 && sudo nginx -s reload \
+&& journalctl -ex
 """
 
 ssh = " gcloud compute ssh --zone {zone} {instance} --command '{command}' "
