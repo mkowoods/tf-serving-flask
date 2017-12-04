@@ -5,8 +5,7 @@ command = """
 cd /home/mkowoods/tf-serving-flask \
 && sudo git fetch origin \
 && sudo git reset --hard origin/master \
-&& source activate tf-serving \
-&& pip install -r requirements.txt \
+&& sudo /home/mkowoods/miniconda/envs/tf-serving/bin/pip install -r requirements.txt \
 && echo restarting tf_serving \
 && sudo systemctl restart tf_serving \
 && echo restarting tf_serving_app \
@@ -23,7 +22,8 @@ instances = [
     ('us-west1-c', 'tf-serving-3'),
     ('us-west1-a', 'tf-serving-4'),
 ]
-for zone, instance in instances[:1]:
+for zone, instance in instances:
     print zone, instance
     print subprocess.call(ssh.format(zone=zone, instance=instance, command=command), shell=True)
+    print "########################\n"
     time.sleep(2)
